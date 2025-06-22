@@ -24,6 +24,13 @@
 - **🖥️ Cross-Platform**: Works on Windows, macOS, and Linux
 - **⚡ Responsive Design**: Fast, non-blocking command execution
 
+## 📸 Screenshot
+
+<div align="center">
+  <img src="images/screenshot.png" alt="Home Assistant Desktop Remote Control Interface" width="600">
+  <p><em>Clean, intuitive remote control interface with familiar button layout</em></p>
+</div>
+
 ## 🚀 Quick Start
 
 ### Installation
