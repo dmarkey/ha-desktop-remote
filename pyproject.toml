@@ -1,0 +1,85 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ha-desktop-remote"
+version = "1.0.0"
+authors = [
+    {name = "David Markey", email = "david@dmarkey.com"},
+]
+description = "Desktop remote control application for Home Assistant"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: End Users/Desktop",
+    "Topic :: Home Automation",
+    "Topic :: Multimedia",
+    "Topic :: System :: Hardware",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Environment :: X11 Applications :: Qt",
+    "Environment :: Win32 (MS Windows)",
+    "Environment :: MacOS X",
+]
+keywords = ["home-assistant", "remote", "control", "desktop", "gui", "qt", "pyside6", "automation", "smart-home"]
+dependencies = [
+    "PySide6>=6.0.0",
+    "requests>=2.25.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "pytest-qt>=4.0",
+    "black>=22.0",
+    "flake8>=4.0",
+    "mypy>=0.900",
+]
+
+[project.urls]
+Homepage = "https://github.com/dmarkey/ha-desktop-remote"
+Repository = "https://github.com/dmarkey/ha-desktop-remote"
+Issues = "https://github.com/dmarkey/ha-desktop-remote/issues"
+Documentation = "https://github.com/dmarkey/ha-desktop-remote#readme"
+
+[project.gui-scripts]
+ha-desktop-remote = "ha_desktop_remote.main:main"
+
+[tool.setuptools]
+packages = ["ha_desktop_remote"]
+
+[tool.setuptools.package-data]
+ha_desktop_remote = ["*.png", "*.ico", "*.svg"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true

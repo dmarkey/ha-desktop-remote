@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Home Assistant Desktop Remote Control
+GenericName=Remote Control
+Comment=Desktop remote control application for Home Assistant
+Exec=ha-desktop-remote
+Icon=ha-desktop-remote
+Terminal=false
+Categories=AudioVideo;RemoteAccess;Network;
+Keywords=home-assistant;remote;control;automation;smart-home;
+StartupNotify=true
+StartupWMClass=ha-desktop-remote
