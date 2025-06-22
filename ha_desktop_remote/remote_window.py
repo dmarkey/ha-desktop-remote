@@ -14,11 +14,12 @@ from PySide6.QtCore import Qt, QTimer
 
 from .remote_manager import load_remotes, save_remotes
 from .remote_wizard import RemoteWizard
+from . import __version__
 
 class RemoteWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Home Assistant Desktop Remote Control")
+        self.setWindowTitle(f"Home Assistant Desktop Remote Control v{__version__}")
         self.setFixedSize(350, 600)  # Increased width and height for dropdown
         
         # Set window icon if available
@@ -243,8 +244,8 @@ class RemoteWindow(QWidget):
         self._showing_feedback = True
         
         # Create a temporary visual indicator in the window title
-        original_title = "Home Assistant Desktop Remote Control"
-        self.setWindowTitle(f"Home Assistant Desktop Remote Control - {command}")
+        original_title = f"Home Assistant Desktop Remote Control v{__version__}"
+        self.setWindowTitle(f"Home Assistant Desktop Remote Control v{__version__} - {command}")
         
         # Reset title and clear flag after 250ms
         def reset_feedback():
@@ -412,6 +413,12 @@ class RemoteWindow(QWidget):
         self.status_label.setProperty("class", "status")
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(self.status_label)
+        
+        # Add version label at the very bottom (discreet)
+        self.version_label = QLabel(f"v{__version__}")
+        self.version_label.setProperty("class", "version")
+        self.version_label.setAlignment(Qt.AlignmentFlag.AlignRight)
+        main_layout.addWidget(self.version_label)
 
         self.setLayout(main_layout)
 
@@ -600,6 +607,15 @@ class RemoteWindow(QWidget):
                 font-size: 9px;
                 color: palette(text);
                 margin: 10px 0;
+            }
+            
+            QLabel[class="version"] {
+                background-color: transparent;
+                border: none;
+                padding: 2px 8px;
+                font-size: 8px;
+                color: palette(mid);
+                margin: 0px;
             }
             
             /* Specific styling for management buttons */

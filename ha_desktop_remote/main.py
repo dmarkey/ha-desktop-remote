@@ -14,6 +14,7 @@ from PySide6.QtCore import QTimer
 from PySide6.QtGui import QIcon
 
 from .remote_window import RemoteWindow
+from . import __version__
 
 
 def main():
@@ -24,7 +25,7 @@ def main():
     app = QApplication(sys.argv)
     app.setApplicationName("Home Assistant Desktop Remote Control")
     app.setApplicationDisplayName("Home Assistant Desktop Remote Control")
-    app.setApplicationVersion("1.0.0")
+    app.setApplicationVersion(__version__)
     app.setOrganizationName("David Markey")
     app.setOrganizationDomain("dmarkey.com")
     
