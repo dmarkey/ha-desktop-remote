@@ -322,7 +322,7 @@ class RemoteWizard(QDialog):
         finish_text = "Update Remote" if self.remote_data else "Create Remote"
         self.finish_button = QPushButton(f"✓ {finish_text}")
         self.finish_button.setProperty("class", "success-button")
-        self.finish_button.clicked.connect(self.finish_wizard)
+        self.finish_button.clicked.connect(self.finish_wizard, Qt.ConnectionType.UniqueConnection)
         
         page3_buttons_layout.addWidget(self.back_button_page3)
         page3_buttons_layout.addStretch()
@@ -490,11 +490,21 @@ Token: {'*' * 20} (hidden)"""
 
     def finish_wizard(self):
         """Complete the wizard and save the remote configuration"""
+        # Prevent multiple calls to finish_wizard (Windows-specific issue)
+        if hasattr(self, '_wizard_finished') and self._wizard_finished:
+            return
+        
         self.remote_name = self.remote_name_input.text().strip()
         if not self.remote_name:
             QMessageBox.warning(self, "Input Error", "Remote name cannot be empty.")
             return
 
+        # Disable the finish button to prevent multiple clicks
+        self.finish_button.setEnabled(False)
+        self.finish_button.setText("Creating...")
+        
+        self._wizard_finished = True
+        
         saved_remote = {
             "name": self.remote_name,
             "ha_url": self.ha_url,
@@ -783,7 +793,7 @@ Token: {'*' * 20} (hidden)"""
         # Enable Enter key to proceed to next step
         self.ha_url_input.returnPressed.connect(self.token_input.setFocus)
         self.token_input.returnPressed.connect(self.validate_page1)
-        self.remote_name_input.returnPressed.connect(self.finish_wizard)
+        self.remote_name_input.returnPressed.connect(self.finish_wizard, Qt.ConnectionType.UniqueConnection)
         
         # Real-time validation feedback
         self.ha_url_input.textChanged.connect(self.validate_url_input)

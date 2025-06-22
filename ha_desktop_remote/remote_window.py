@@ -708,8 +708,10 @@ class RemoteWindow(QWidget):
     def add_remote(self):
         """Open wizard to add a new remote"""
         wizard = RemoteWizard(parent=self)
-        wizard.remote_saved.connect(self.handle_remote_saved)
-        wizard.exec()
+        wizard.remote_saved.connect(self.handle_remote_saved, Qt.ConnectionType.UniqueConnection)
+        result = wizard.exec()
+        # Explicitly disconnect to prevent multiple connections on Windows
+        wizard.remote_saved.disconnect(self.handle_remote_saved)
 
     def edit_remote(self):
         """Open wizard to edit the selected remote"""
@@ -717,31 +719,43 @@ class RemoteWindow(QWidget):
         if current_index >= 0 and self.remotes:
             remote_to_edit = self.remotes[current_index]
             wizard = RemoteWizard(remote_data=remote_to_edit, remote_index=current_index, parent=self)
-            wizard.remote_saved.connect(self.handle_remote_saved)
-            wizard.exec()
+            wizard.remote_saved.connect(self.handle_remote_saved, Qt.ConnectionType.UniqueConnection)
+            result = wizard.exec()
+            # Explicitly disconnect to prevent multiple connections on Windows
+            wizard.remote_saved.disconnect(self.handle_remote_saved)
 
     def handle_remote_saved(self, saved_remote, remote_index):
         """Handle when a remote is saved from the wizard"""
-        if remote_index == -1:  # New remote
-            self.remotes.append(saved_remote)
-            message = f"Remote '{saved_remote['name']}' added successfully!"
-        else:  # Existing remote edited
-            self.remotes[remote_index] = saved_remote
-            message = f"Remote '{saved_remote['name']}' updated successfully!"
+        # Prevent multiple dialogs by checking if we're already processing
+        if hasattr(self, '_processing_remote_save') and self._processing_remote_save:
+            return
         
-        save_remotes(self.remotes)
-        self.populate_remote_dropdown()
+        self._processing_remote_save = True
         
-        # Select the newly added/edited remote
-        if remote_index == -1:
-            self.remote_dropdown.setCurrentIndex(len(self.remotes) - 1)
-        else:
-            self.remote_dropdown.setCurrentIndex(remote_index)
-        
-        QMessageBox.information(self, "Success", message)
-        
-        # Restore keyboard focus after dialog closes
-        self.ensure_keyboard_focus()
+        try:
+            if remote_index == -1:  # New remote
+                self.remotes.append(saved_remote)
+                message = f"Remote '{saved_remote['name']}' added successfully!"
+            else:  # Existing remote edited
+                self.remotes[remote_index] = saved_remote
+                message = f"Remote '{saved_remote['name']}' updated successfully!"
+            
+            save_remotes(self.remotes)
+            self.populate_remote_dropdown()
+            
+            # Select the newly added/edited remote
+            if remote_index == -1:
+                self.remote_dropdown.setCurrentIndex(len(self.remotes) - 1)
+            else:
+                self.remote_dropdown.setCurrentIndex(remote_index)
+            
+            QMessageBox.information(self, "Success", message)
+            
+            # Restore keyboard focus after dialog closes
+            self.ensure_keyboard_focus()
+        finally:
+            # Always reset the flag
+            self._processing_remote_save = False
 
     def delete_remote(self):
         """Delete the currently selected remote"""
