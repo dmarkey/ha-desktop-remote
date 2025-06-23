@@ -765,7 +765,6 @@ class RemoteWindow(QWidget):
             else:
                 self.remote_dropdown.setCurrentIndex(remote_index)
             
-            QMessageBox.information(self, "Success", message)
             
             # Restore keyboard focus after dialog closes
             self.ensure_keyboard_focus()

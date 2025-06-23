@@ -5,7 +5,7 @@ A desktop application for controlling Home Assistant media players and other dev
 through an intuitive remote control interface.
 """
 
-__version__ = "1.0.3"
+__version__ = "1.0.4"
 __author__ = "David Markey"
 __email__ = "david@dmarkey.com"
 __description__ = "Desktop remote control application for Home Assistant"
